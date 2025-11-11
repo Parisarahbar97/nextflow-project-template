@@ -1,8 +1,12 @@
 // Minimal example module (DSL2)
 
 process HELLO_PROCESS {
+    // Run this process inside a container image
+    container 'ghcr.io/johnsonlab-ic/causal-flow:latest'
+
     tag { sampleName }
     publishDir "${params.outputDir}/${sampleName}", mode: 'copy'
+    label 'low'
 
     input:
     val sampleName
@@ -17,13 +21,5 @@ process HELLO_PROCESS {
     """
 }
 
-// module wrapper to accept a channel
-workflow HELLO (sample_ch) {
-    sample_ch
-        .map { it -> it }
-        .set { names }
-
-    names.into { in_ch }
-
-    HELLO_PROCESS(in_ch)
-}
+// NOTE: removed the workflow wrapper so this module only exposes the process
+// Use the process directly from `main.nf` (e.g. include { HELLO_PROCESS } from './modules/hello/hello')

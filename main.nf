@@ -1,12 +1,13 @@
 nextflow.enable.dsl=2
 
-// include a minimal example module
-include { HELLO } from './modules/hello/hello'
+// include the hello process from the example module
+include { HELLO_PROCESS } from './modules/hello/hello'
 
 // Default parameters
 params.samples = "samples.csv"
 params.outputDir = "results"
 params.help = false
+
 
 workflow {
     if (params.help) {
@@ -21,9 +22,9 @@ workflow {
         .splitCsv(header:true)
         .map { row -> row.name }
 
-    // call the HELLO module for each sample name
-    hello_out = HELLO(samples_ch)
+    // call the HELLO_PROCESS for each sample name (process expects a channel of vals)
+    hello_out = HELLO_PROCESS(samples_ch)
 
-    // publish greetings
+    // publish greetings — this will print the produced path(s)
     hello_out.view()
 }
