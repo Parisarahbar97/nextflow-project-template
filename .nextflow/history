@@ -1,8 +1,0 @@
-2025-11-11 16:53:08	-	silly_lagrange	-	80506aeb9df0c8e7d1bc06a4e1c7c946	5ec874d4-5658-4e18-a353-ee8c74d6939f	nextflow run main.nf --samples samples.csv -profile standard
-2025-11-11 16:56:29	1.5s	trusting_cray	OK	4990d2fa7ef0d3654aa5d420382983eb	91976134-692a-43f9-acd3-769ce60450a8	nextflow run main.nf --samples samples.csv -profile standard
-2025-11-11 17:13:24	1.2s	tender_lovelace	OK	fbaadd616f01f1b16394497468cf7560	024d5c46-2cec-49ce-b172-b4625beb7788	nextflow run main.nf --samples samples.csv -profile local
-2025-11-11 17:14:23	1.4s	confident_heisenberg	OK	fbaadd616f01f1b16394497468cf7560	0d759724-be29-4f09-b2f5-75b6351dc7c1	nextflow run main.nf --samples samples.csv -profile local
-2025-11-11 17:14:35	8.4s	prickly_bassi	ERR	fbaadd616f01f1b16394497468cf7560	f3481f73-d77a-44ff-b812-4379ede91b5d	nextflow run main.nf --samples samples.csv -profile imperial
-2025-11-11 17:17:32	5.1s	festering_poincare	ERR	fbaadd616f01f1b16394497468cf7560	d7962e37-460f-41c1-b967-27fd9cae2f5e	nextflow run main.nf --samples samples.csv -profile imperial
-2025-11-11 17:19:47	44.9s	condescending_keller	ERR	fbaadd616f01f1b16394497468cf7560	cdf167af-4bbb-4faf-a84e-b0b355e7a3ee	nextflow run main.nf --samples samples.csv -profile imperial
-2025-11-11 17:20:34	31.2s	gigantic_kimura	ERR	fbaadd616f01f1b16394497468cf7560	734e562b-ac0e-4b8f-a6a5-1fc3c6d5f673	nextflow run main.nf --samples samples.csv -profile imperial
