@@ -40,6 +40,8 @@ How to run
 ----------
 ```bash
 cd /home/pr422/RDS/live/Users/Parisa/demux-qc-flow
-nextflow run main.nf -profile local --pools_csv pools.csv
+nextflow run main.nf -profile local   --pools_csv pools.csv   # local profile (Docker on)
+# or
+nextflow run main.nf -profile standard --pools_csv pools.csv   # alias of local
 ```
 Outputs per pool land in the `outdir` from `pools.csv` (e.g., `/home/pr422/RDS/live/Users/Parisa/EPILEP/diseased/demuxlet_results/<POOL>`), including `<pool>_final_labels.tsv`.
