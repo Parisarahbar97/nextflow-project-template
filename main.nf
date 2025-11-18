@@ -121,6 +121,7 @@ process PILEUP {
       tuple val(pool), val(barcodes), val(qc_rds), val(outdir), val(sites_bamorder), val(harmonized_donor), path('pileup_prefix.txt')
     script:
     """
+    export OMP_NUM_THREADS=40
     prefix="${outdir}/${pool}_pileup_intersect"
     /bin/bash ${params.pileup_script} \
       --sam ${bam} \
@@ -139,6 +140,7 @@ process DEMUXLET {
       tuple val(pool), val(qc_rds), val(outdir), path('demuxlet_err015.best')
     script:
     """
+    export OMP_NUM_THREADS=40
     PLP=$(cat ${pileup_prefix_file})
     OUTDIR=${outdir}/demuxlet
     mkdir -p ${OUTDIR}
