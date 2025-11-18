@@ -4,6 +4,7 @@ nextflow.enable.dsl=2
  End-to-end QC ∩ Demuxlet workflow for all pools.
  CSV input (--pools_csv) columns:
    pool,bam,barcodes,donor_vcf,qc_rds,outdir
+ Outputs go to the per-pool outdir specified in pools.csv.
 */
 
 params.pools_csv         = params.pools_csv         ?: 'pools.csv'
@@ -24,17 +25,16 @@ workflow {
 
     pop_norm = NORMALIZE_POP(params.pop_vcf, params.ref_fasta)
 
-    samples
-      .combine(pop_norm.map{ it })
-      .set { sample_with_pop }
+    // attach pop_norm to every sample
+    samples.combine(pop_norm.map{ it }).set { sample_with_pop }
 
-    donor_norm   = sample_with_pop | NORMALIZE_DONOR
-    intersected  = donor_norm      | INTERSECT_SITES
-    reheadered   = intersected     | REHEADER_SITES
-    harmonized   = reheadered      | HARMONIZE_DONOR
-    pileups      = harmonized      | PILEUP
-    demux_calls  = pileups         | DEMUXLET
-    final_labels = demux_calls     | QC_INTERSECT
+    donor_norm    = sample_with_pop | NORMALIZE_DONOR
+    intersected   = donor_norm      | INTERSECT_SITES
+    reheadered    = intersected     | REHEADER_SITES
+    harmonized    = reheadered      | HARMONIZE_DONOR
+    pileups       = harmonized      | PILEUP
+    demux_calls   = pileups         | DEMUXLET
+    final_labels  = demux_calls     | QC_INTERSECT
 
     final_labels.view()
 }
@@ -118,7 +118,7 @@ process PILEUP {
     input:
       tuple val(pool), val(bam), val(barcodes), val(qc_rds), val(outdir), path(sites_bamorder), path(harmonized_donor)
     output:
-      tuple val(pool), val(qc_rds), val(outdir), val(sites_bamorder), val(harmonized_donor), path('pileup_prefix.txt')
+      tuple val(pool), val(barcodes), val(qc_rds), val(outdir), val(sites_bamorder), val(harmonized_donor), path('pileup_prefix.txt')
     script:
     """
     prefix="${outdir}/${pool}_pileup_intersect"
@@ -134,7 +134,7 @@ process PILEUP {
 process DEMUXLET {
     tag { "demux_${pool}" }
     input:
-      tuple val(pool), val(qc_rds), val(outdir), val(sites_bamorder), val(harmonized_donor), path(pileup_prefix_file)
+      tuple val(pool), val(barcodes), val(qc_rds), val(outdir), val(sites_bamorder), val(harmonized_donor), path(pileup_prefix_file)
     output:
       tuple val(pool), val(qc_rds), val(outdir), path('demuxlet_err015.best')
     script:
@@ -145,7 +145,7 @@ process DEMUXLET {
     /bin/bash ${params.demux_script} \
       --plp ${PLP} \
       --vcf ${harmonized_donor} \
-      --barcodes ${PLP}.cel.gz \
+      --barcodes ${barcodes} \
       --outdir ${OUTDIR} \
       --errs ${params.geno_error_offset} \
       --doublet-prior ${params.doublet_prior} \
